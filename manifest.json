@@ -28,5 +28,17 @@
     "16": "icon_16x16.png",
     "48": "icon_48x48.png",
     "128": "icon_128x128.png"
+  },
+  "homepage_url": "https://github.com/wanyakomochimochi/ChatGPTJumpBack"
+  ,
+  "options_page": "options.html"
+  ,
+  "commands": {
+    "jump-back": {
+      "description": "Jump back to last reading position",
+      "suggested_key": {
+        "default": "Alt+J"
+      }
+    }
   }
 }

@@ -30,7 +30,13 @@ function updateContextMenus() {
 
     chrome.contextMenus.create({
       id: "jumpback-toggle",
-      title: userEnabled ? "ChatGPT JumpBackを無効化" : "ChatGPT JumpBackを有効化",
+      title: userEnabled ? "ChatGPT JumpBack を無効化" : "ChatGPT JumpBack を有効化",
+      contexts: ["action"],
+    });
+
+    chrome.contextMenus.create({
+      id: "jumpback-open-options",
+      title: "設定を開く",
       contexts: ["action"],
     });
 
@@ -53,9 +59,21 @@ chrome.action.onClicked.addListener((tab) => {
   }
 });
 
+// キーボードショートカット（Chrome commands）
+chrome.commands?.onCommand.addListener(async (command) => {
+  if (command !== "jump-back") return;
+  const tabs = await chrome.tabs.query({ active: true, currentWindow: true });
+  const tab = tabs[0];
+  if (!tab || !tab.id) return;
+  const active = userEnabled && isChatGPTUrl(tab.url);
+  if (active) {
+    chrome.tabs.sendMessage(tab.id, { type: "jump" });
+  }
+});
+
 chrome.contextMenus.onClicked.addListener((info, tab) => {
   if (info.menuItemId === "jumpback-info") {
-    chrome.tabs.create({ url: "https://example.com" });
+    chrome.tabs.create({ url: "https://github.com/wanyakomochimochi/ChatGPTJumpBack" });
   }
 
   if (info.menuItemId === "jumpback-toggle") {
@@ -67,6 +85,10 @@ chrome.contextMenus.onClicked.addListener((info, tab) => {
 
   if (info.menuItemId === "jumpback-page-jump" && tab?.id) {
     chrome.tabs.sendMessage(tab.id, { type: "jump" });
+  }
+
+  if (info.menuItemId === "jumpback-open-options") {
+    chrome.runtime.openOptionsPage();
   }
 });
 
@@ -130,3 +152,11 @@ chrome.runtime.onStartup.addListener(async () => {
   updateContextMenus();
 });
 
+// 設定変更の監視（即時反映）
+chrome.storage.onChanged.addListener(async (changes, area) => {
+  if (area !== "local" || !changes.userEnabled) return;
+  userEnabled = !!changes.userEnabled.newValue;
+  const tabs = await chrome.tabs.query({ active: true, currentWindow: true });
+  if (tabs[0]) updateIcon(tabs[0].id);
+  updateContextMenus();
+});

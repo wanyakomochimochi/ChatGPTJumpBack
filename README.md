@@ -20,6 +20,8 @@ When you send a prompt in ChatGPT, the page scrolls to the bottom. With JumpBack
     - Toggle “Enable/Disable ChatGPT JumpBack”
   - Right-click the page (only on ChatGPT when enabled):
     - “Return to last reading position”
+- Keyboard shortcut:
+  - Default: Alt+J (changeable at chrome://extensions/shortcuts)
 - Auto enable/disable:
   - Enabled only if the active tab is a ChatGPT page
   - Disabled automatically when ChatGPT tab is closed or inactive
@@ -73,6 +75,8 @@ ChatGPT でプロンプトを送信するとページが末尾までスクロー
     - 「ChatGPT JumpBack を有効化/無効化」
   - ページの右クリック（ChatGPT かつ有効時のみ表示）:
     - 「読み途中の会話に戻る」
+- キーボードショートカット:
+  - 既定: Alt+J（chrome://extensions/shortcuts で変更可能）
 - 自動有効/無効:
   - アクティブタブが ChatGPT ページなら自動で有効
   - ChatGPT を閉じる / 他のページに切替えで自動無効

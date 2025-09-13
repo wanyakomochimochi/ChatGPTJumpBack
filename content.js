@@ -65,6 +65,8 @@
     });
   }
 
+  // キーボードショートカットは Chrome の commands に統一
+
   // Enter送信時に記録
   document.addEventListener(
     "keydown",
@@ -73,6 +75,8 @@
     },
     true // capture: ChatGPT 側で stopPropagation されても拾う
   );
+
+  // ページ内ショートカット実装は削除（競合回避・設定の一元化のため）
 
   // 送信ボタン監視
   const sendObserver = new MutationObserver(() => {
