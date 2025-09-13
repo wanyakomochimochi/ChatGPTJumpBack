@@ -1,6 +1,5 @@
 // background.js
-let userEnabled = true; // ユーザー設定（有効/無効）
-let isChatGPT = false;  // アクティブタブが ChatGPT かどうか
+let userEnabled = true; // ON=colored icon, OFF=gray (persisted)
 
 function isChatGPTUrl(url) {
   if (!url) return false;
@@ -12,61 +11,34 @@ function isChatGPTUrl(url) {
   }
 }
 
-function updateIcon(tabId) {
-  const active = userEnabled && isChatGPT;
-  const path = active
-    ? { 16: "icon_16x16.png", 48: "icon_48x48.png", 128: "icon_128x128.png" }
-    : { 16: "icon_gray_16x16.png", 48: "icon_gray_48x48.png", 128: "icon_gray_128x128.png" };
-  chrome.action.setIcon({ tabId, path });
+function t(key) {
+  try { return chrome.i18n.getMessage(key) || key; } catch { return key; }
+}
+
+async function refreshIcons() {
+  const colored = !!userEnabled;
+  const tabs = await chrome.tabs.query({});
+  const coloredPath = { 16: "color_16.png", 48: "color_48.png", 128: "color_128.png" };
+  const grayPath = { 16: "gray_16.png", 48: "gray_48.png", 128: "gray_128.png" };
+  for (const t of tabs) {
+    if (t.id) chrome.action.setIcon({ tabId: t.id, path: colored ? coloredPath : grayPath });
+  }
 }
 
 function updateContextMenus() {
   chrome.contextMenus.removeAll(() => {
-    chrome.contextMenus.create({
-      id: "jumpback-info",
-      title: "ChatGPT JumpBack",
-      contexts: ["action"],
-    });
-
-    chrome.contextMenus.create({
-      id: "jumpback-toggle",
-      title: userEnabled ? "ChatGPT JumpBack を無効化" : "ChatGPT JumpBack を有効化",
-      contexts: ["action"],
-    });
-
-    chrome.contextMenus.create({
-      id: "jumpback-open-options",
-      title: "設定を開く",
-      contexts: ["action"],
-    });
-
-    if (userEnabled && isChatGPT) {
-      chrome.contextMenus.create({
-        id: "jumpback-page-jump",
-        title: "読み途中の会話に戻る",
-        contexts: ["page"],
-        documentUrlPatterns: ["https://chat.openai.com/*", "https://chatgpt.com/*"],
-      });
+    chrome.contextMenus.create({ id: "jumpback-info", title: t("menuInfo"), contexts: ["action"] });
+    chrome.contextMenus.create({ id: "jumpback-toggle", title: userEnabled ? t("menuToggleDisable") : t("menuToggleEnable"), contexts: ["action"] });
+    if (userEnabled) {
+      chrome.contextMenus.create({ id: "jumpback-page-jump", title: t("menuPageJump"), contexts: ["page"], documentUrlPatterns: ["https://chat.openai.com/*", "https://chatgpt.com/*"] });
     }
   });
 }
 
 chrome.action.onClicked.addListener((tab) => {
   if (!tab || !tab.id) return;
-  const active = userEnabled && isChatGPTUrl(tab.url);
-  if (active) {
-    chrome.tabs.sendMessage(tab.id, { type: "jump" });
-  }
-});
-
-// キーボードショートカット（Chrome commands）
-chrome.commands?.onCommand.addListener(async (command) => {
-  if (command !== "jump-back") return;
-  const tabs = await chrome.tabs.query({ active: true, currentWindow: true });
-  const tab = tabs[0];
-  if (!tab || !tab.id) return;
-  const active = userEnabled && isChatGPTUrl(tab.url);
-  if (active) {
+  if (!userEnabled) return;
+  if (isChatGPTUrl(tab.url)) {
     chrome.tabs.sendMessage(tab.id, { type: "jump" });
   }
 });
@@ -75,88 +47,73 @@ chrome.contextMenus.onClicked.addListener((info, tab) => {
   if (info.menuItemId === "jumpback-info") {
     chrome.tabs.create({ url: "https://github.com/wanyakomochimochi/ChatGPTJumpBack" });
   }
-
   if (info.menuItemId === "jumpback-toggle") {
     userEnabled = !userEnabled;
     chrome.storage?.local?.set?.({ userEnabled });
-    if (tab?.id) updateIcon(tab.id);
+    refreshIcons();
     updateContextMenus();
+    if (userEnabled) injectIntoExistingChatGPTTabs();
   }
-
-  if (info.menuItemId === "jumpback-page-jump" && tab?.id) {
+  if (info.menuItemId === "jumpback-page-jump" && tab?.id && userEnabled) {
     chrome.tabs.sendMessage(tab.id, { type: "jump" });
   }
-
-  if (info.menuItemId === "jumpback-open-options") {
-    chrome.runtime.openOptionsPage();
-  }
 });
 
-chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
-  if (changeInfo.status === "complete" && tab?.active) {
-    isChatGPT = isChatGPTUrl(tab.url);
-    updateIcon(tabId);
-    updateContextMenus();
-  }
-});
-
-chrome.tabs.onActivated.addListener(async (activeInfo) => {
-  try {
-    const tab = await chrome.tabs.get(activeInfo.tabId);
-    isChatGPT = isChatGPTUrl(tab?.url);
-    updateIcon(activeInfo.tabId);
-    updateContextMenus();
-  } catch {
-    isChatGPT = false;
-  }
-});
-
-chrome.tabs.onRemoved.addListener(async () => {
+chrome.commands?.onCommand.addListener(async (command) => {
+  if (command !== "jump-back") return;
+  if (!userEnabled) return;
   const tabs = await chrome.tabs.query({ active: true, currentWindow: true });
-  if (tabs[0]) {
-    isChatGPT = isChatGPTUrl(tabs[0].url);
-    updateIcon(tabs[0].id);
-  } else {
-    isChatGPT = false;
+  const tab = tabs[0];
+  if (tab?.id && isChatGPTUrl(tab.url)) {
+    chrome.tabs.sendMessage(tab.id, { type: "jump" });
   }
-  updateContextMenus();
 });
+
+chrome.tabs.onUpdated.addListener(async (tabId, changeInfo) => {
+  if (changeInfo.status === "complete") {
+    await refreshIcons();
+    updateContextMenus();
+  }
+});
+chrome.tabs.onActivated.addListener(async () => { await refreshIcons(); updateContextMenus(); });
+chrome.tabs.onRemoved.addListener(async () => { await refreshIcons(); updateContextMenus(); });
 
 chrome.runtime.onInstalled.addListener(async () => {
   try {
     const { userEnabled: stored } = await chrome.storage?.local?.get?.("userEnabled") || {};
     if (typeof stored === "boolean") userEnabled = stored;
   } catch {}
-  const tabs = await chrome.tabs.query({ active: true, currentWindow: true });
-  if (tabs[0]) {
-    isChatGPT = isChatGPTUrl(tabs[0].url);
-    updateIcon(tabs[0].id);
-  } else {
-    isChatGPT = false;
-  }
+  await refreshIcons();
   updateContextMenus();
+  if (userEnabled) injectIntoExistingChatGPTTabs();
 });
-
 chrome.runtime.onStartup.addListener(async () => {
   try {
     const { userEnabled: stored } = await chrome.storage?.local?.get?.("userEnabled") || {};
     if (typeof stored === "boolean") userEnabled = stored;
   } catch {}
-  const tabs = await chrome.tabs.query({ active: true, currentWindow: true });
-  if (tabs[0]) {
-    isChatGPT = isChatGPTUrl(tabs[0].url);
-    updateIcon(tabs[0].id);
-  } else {
-    isChatGPT = false;
-  }
+  await refreshIcons();
   updateContextMenus();
+  if (userEnabled) injectIntoExistingChatGPTTabs();
 });
-
-// 設定変更の監視（即時反映）
 chrome.storage.onChanged.addListener(async (changes, area) => {
   if (area !== "local" || !changes.userEnabled) return;
   userEnabled = !!changes.userEnabled.newValue;
-  const tabs = await chrome.tabs.query({ active: true, currentWindow: true });
-  if (tabs[0]) updateIcon(tabs[0].id);
+  await refreshIcons();
   updateContextMenus();
 });
+
+async function injectIntoExistingChatGPTTabs() {
+  try {
+    const tabs = await chrome.tabs.query({ url: ["https://chat.openai.com/*", "https://chatgpt.com/*"] });
+    for (const t of tabs) {
+      if (!t.id) continue;
+      try {
+        await chrome.scripting.executeScript({ target: { tabId: t.id }, files: ["content.js"] });
+      } catch (e) {
+        // ignore
+      }
+    }
+  } catch {}
+}
+

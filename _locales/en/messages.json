@@ -1,0 +1,16 @@
+{
+  "appName": { "message": "ChatGPT JumpBack" },
+  "appDesc": { "message": "Quickly jump back to your last reading position in ChatGPT." },
+  "actionTitle": { "message": "Jump back to last reading position" },
+  "menuInfo": { "message": "ChatGPT JumpBack" },
+  "menuToggleEnable": { "message": "Enable ChatGPT JumpBack" },
+  "menuToggleDisable": { "message": "Disable ChatGPT JumpBack" },
+  "menuPageJump": { "message": "Return to last reading position" }
+  ,
+  "optionsTitle": { "message": "ChatGPT JumpBack Options" },
+  "optionsHeading": { "message": "ChatGPT JumpBack Options" },
+  "optEnable": { "message": "Enable ChatGPT JumpBack" },
+  "optHint": { "message": "Works only on ChatGPT pages. Changes apply immediately." },
+  "optShortcuts": { "message": "Keyboard Shortcuts" },
+  "optShortcutsHint": { "message": "Change shortcuts at chrome://extensions/shortcuts. Default: Alt+J (mac: Alt+Shift+J)." }
+}

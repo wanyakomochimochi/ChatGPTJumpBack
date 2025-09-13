@@ -1,9 +1,11 @@
 {
   "manifest_version": 3,
-  "name": "ChatGPT JumpBack",
-  "version": "0.6.1",
-  "description": "Quickly jump back to your last reading position in ChatGPT.",
-  "permissions": ["contextMenus", "tabs", "storage"],
+  "name": "__MSG_appName__",
+  "version": "1.0.0",
+  "version_name": "1.0.0",
+  "default_locale": "en",
+  "description": "__MSG_appDesc__",
+  "permissions": ["contextMenus", "tabs", "storage", "scripting"],
   "background": {
     "service_worker": "background.js"
   },
@@ -17,17 +19,22 @@
       "run_at": "document_end"
     }
   ],
+  "host_permissions": [
+    "https://chat.openai.com/*",
+    "https://chatgpt.com/*"
+  ],
   "action": {
     "default_icon": {
-      "16": "icon_gray_16x16.png",
-      "48": "icon_gray_48x48.png",
-      "128": "icon_gray_128x128.png"
-    }
+      "16": "gray_16.png",
+      "48": "gray_48.png",
+      "128": "gray_128.png"
+    },
+    "default_title": "__MSG_actionTitle__"
   },
   "icons": {
-    "16": "icon_16x16.png",
-    "48": "icon_48x48.png",
-    "128": "icon_128x128.png"
+    "16": "color_16.png",
+    "48": "color_48.png",
+    "128": "color_128.png"
   },
   "homepage_url": "https://github.com/wanyakomochimochi/ChatGPTJumpBack"
   ,
@@ -37,7 +44,8 @@
     "jump-back": {
       "description": "Jump back to last reading position",
       "suggested_key": {
-        "default": "Alt+J"
+        "default": "Alt+J",
+        "mac": "Alt+Shift+J"
       }
     }
   }

@@ -1,106 +1,133 @@
 # ChatGPT JumpBack
 
-When you send a prompt in ChatGPT, the page scrolls to the bottom. With JumpBack, you can quickly return to where you were reading so you don’t lose context.
+Quickly jump back to the last place you were reading after ChatGPT auto-scrolls to the bottom.
+
+![Main usage - jump back from bottom](docs/screenshot-main.gif)
+
+## What It Solves
+
+- When you send a prompt, ChatGPT scrolls to the end. JumpBack records the closest visible message (near the viewport center) so you can instantly return without losing context.
+
+## How It Works
+
+- Records on send (Enter or Send button) or when clicking the "scroll to latest/bottom" UI.
+- Jumps back to the recorded message via icon click, keyboard shortcut, or the page context menu.
 
 ---
 
-## ✨ Features
+## Features
 
-- Auto-record: Saves the nearest visible message block (center of the screen) when you:
-  - Press Enter to send a prompt
-  - Click the Send button
-  - Click the “Scroll to latest” button
-- Jump back: Instantly scroll back to the recorded position
-- Icon state:
-  - Color = enabled (active on ChatGPT page)
-  - Gray = disabled
+- Auto-record on:
+  - Enter (without Shift) to send
+  - Clicking the Send button
+  - Clicking the "scroll to latest/bottom" UI (broad detection to avoid misses)
+- Jump back via:
+  - Extension icon click
+  - Keyboard shortcut
+  - Page context menu (on ChatGPT only, when enabled)
+- Icon behavior:
+  - Extension ON: icon is colored
+  - Extension OFF: icon is gray
+  - On non-ChatGPT sites, actions do nothing even if the icon is colored
+- Options page:
+  - Toggle "Enable ChatGPT JumpBack" (persists across browser restarts)
 - Context menus:
-  - Right-click the extension icon:
-    - Open “ChatGPT JumpBack” page (Chrome Web Store link)
-    - Toggle “Enable/Disable ChatGPT JumpBack”
-  - Right-click the page (only on ChatGPT when enabled):
-    - “Return to last reading position”
+  - Action icon (right-click): Open info (GitHub), Enable/Disable
+  - Page (right-click on ChatGPT only, when enabled): "Return to last reading position"
 - Keyboard shortcut:
-  - Default: Alt+J (changeable at chrome://extensions/shortcuts)
-- Auto enable/disable:
-  - Enabled only if the active tab is a ChatGPT page
-  - Disabled automatically when ChatGPT tab is closed or inactive
+  - Default: Alt+J (mac: Alt+Shift+J). Change at chrome://extensions/shortcuts
 
 ---
 
-## 🛠 Installation (Developer Mode)
+## Installation (Developer Mode)
 
-1. Download this repository (Code → Download ZIP) and unzip.
-2. Open Chrome → `chrome://extensions/`.
+1. Download this repository (Code -> Download ZIP), then unzip.
+2. Open Chrome -> `chrome://extensions/`.
 3. Enable Developer mode (top-right).
-4. Click “Load unpacked” and select the unzipped folder.
-5. The extension icon should appear in your toolbar.
+4. Click "Load unpacked" and select the unzipped folder.
+5. Pin the extension if you want quick access.
 
 ---
 
-## ⚠ Notes
+## Usage
 
-- This extension relies on ChatGPT’s DOM structure.
-  It detects `div[data-message-author-role]` elements to recognize ChatGPT pages.
-- Since ChatGPT is a SPA (Single Page Application), UI updates may change behaviors.
-- If it stops working, updating the selector may be required.
+- While reading, send a prompt (Enter without Shift or click Send) or click the "scroll to latest/bottom" UI.
+- The extension records the closest visible message (near viewport center).
+- Jump back:
+  - Click the extension icon, or
+  - Use the shortcut (Alt+J; mac: Alt+Shift+J), or
+  - Right-click the page (on ChatGPT) -> "Return to last reading position"
+
+Tip: Recording has a small 200ms debounce to avoid accidental duplicates.
 
 ---
 
-## 📜 License
+## Settings
+
+- Open the options page:
+  - `chrome://extensions/` -> this extension -> "Extension options"
+- Toggle "Enable ChatGPT JumpBack"
+  - ON: Colored icon; features enabled on ChatGPT pages
+  - OFF: Gray icon; features disabled
+
+The ON/OFF setting persists across restarts.
+
+---
+
+## Permissions and Scope
+
+- Permissions: `contextMenus`, `tabs`, `storage`, `scripting`
+- Content script runs only on:
+  - `https://chat.openai.com/*`
+  - `https://chatgpt.com/*`
+- Host permissions (for injecting into already-open tabs):
+  - `https://chat.openai.com/*`
+  - `https://chatgpt.com/*`
+- No network requests or analytics. Storage is used only for the ON/OFF setting.
+
+---
+
+## Notes and Limitations
+
+- Relies on ChatGPT's DOM structure and detects `div[data-message-author-role]`.
+- ChatGPT is a SPA; UI changes may break selectors. If it stops working, update the selector.
+- "Scroll to latest" detection uses a broad fallback to reduce missed detections (especially on mobile). In rare cases it may trigger on unrelated buttons due to UI changes; this is a trade‑off that favors reliability over misses. If you notice unexpected behavior, please open an issue and we will refine the detection.
+
+---
+
+## Troubleshooting
+
+- Icon doesn't change after toggling in Settings:
+  - Reload the extension at `chrome://extensions/` if needed.
+  - Icon shows colored only when the extension is ON.
+- No jump:
+  - Ensure you're on a ChatGPT page.
+  - Check the page console for logs like `[ChatGPT JumpBack] content loaded` and `record/jump`.
+- Shortcut doesn't fire:
+  - Set/change it at `chrome://extensions/shortcuts`.
+  - On macOS, the default is Alt+Shift+J to avoid text input conflicts.
+
+---
+
+## License
 
 MIT License
 
 ---
 
-# ChatGPT JumpBack（日本語）
+## Links
 
-ChatGPT でプロンプトを送信するとページが末尾までスクロールされます。JumpBack は、読み途中の場所に素早く戻れる拡張機能です。会話の流れを追いやすくなり、文脈を見失いません。
-
----
-
-## ✨ 機能
-
-- 自動記録: 次の操作時に、画面中央に最も近い会話ブロックを記録
-  - Enter キーで送信
-  - 送信ボタンをクリック
-  - 「最新へ」ボタンをクリック
-- ジャンプバック: 記録した位置までスムーズに戻ります
-- アイコン状態:
-  - カラー = 有効（ChatGPT ページで動作中）
-  - グレー = 無効
-- コンテキストメニュー:
-  - 拡張アイコンの右クリック:
-    - 「ChatGPT JumpBack」ページを開く（Chrome ウェブストア）
-    - 「ChatGPT JumpBack を有効化/無効化」
-  - ページの右クリック（ChatGPT かつ有効時のみ表示）:
-    - 「読み途中の会話に戻る」
-- キーボードショートカット:
-  - 既定: Alt+J（chrome://extensions/shortcuts で変更可能）
-- 自動有効/無効:
-  - アクティブタブが ChatGPT ページなら自動で有効
-  - ChatGPT を閉じる / 他のページに切替えで自動無効
+- Project (GitHub): https://github.com/wanyakomochimochi/ChatGPTJumpBack
 
 ---
 
-## 🛠 インストール方法（開発者モード）
+## Packaging (ZIP for Chrome Web Store)
 
-1. 本リポジトリをダウンロード（右上の Code → Download ZIP）して解凍
-2. Chrome で `chrome://extensions/` にアクセス
-3. 右上の「デベロッパーモード」をオン
-4. 「パッケージ化されていない拡張機能を読み込む」をクリックし、解凍したフォルダを選択
-5. ツールバーにアイコンが表示されれば成功
-
----
-
-## ⚠ 注意点
-
-- ChatGPT の DOM 構造に依存しています。`div[data-message-author-role]` 要素で ChatGPT ページを判定します。
-- ChatGPT は SPA（シングルページアプリ）なので、UI 更新で動作が変わる可能性があります。
-- 動作しなくなった場合は、セレクタの更新が必要になることがあります。
-
----
-
-## 📜 ライセンス
-
-MIT License
+- Simple (fixed name):
+  - `New-Item -ItemType Directory -Force dist | Out-Null`
+  - `$files = @('manifest.json','background.js','content.js','options.html','options.js','_locales','color_16.png','color_48.png','color_128.png','gray_16.png','gray_48.png','gray_128.png')`
+  - `Compress-Archive -Path $files -DestinationPath dist/ChatGPTJumpBack-v1.0.0.zip -Force`
+- Dynamic (use manifest version):
+  - `$mf = Get-Content manifest.json -Raw | ConvertFrom-Json`
+  - `$ver = $mf.version`
+  - `Compress-Archive -Path $files -DestinationPath ("dist/ChatGPTJumpBack-v$ver.zip") -Force`

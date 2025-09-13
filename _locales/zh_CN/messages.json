@@ -1,0 +1,16 @@
+{
+  "appName": { "message": "ChatGPT JumpBack" },
+  "appDesc": { "message": "快速返回到 ChatGPT 中上次阅读的位置。" },
+  "actionTitle": { "message": "返回到上次阅读位置" },
+  "menuInfo": { "message": "ChatGPT JumpBack" },
+  "menuToggleEnable": { "message": "启用 ChatGPT JumpBack" },
+  "menuToggleDisable": { "message": "禁用 ChatGPT JumpBack" },
+  "menuPageJump": { "message": "返回到上次阅读位置" },
+  "optionsTitle": { "message": "ChatGPT JumpBack 设置" },
+  "optionsHeading": { "message": "ChatGPT JumpBack 设置" },
+  "optEnable": { "message": "启用 ChatGPT JumpBack" },
+  "optHint": { "message": "仅在 ChatGPT 页面上工作。更改会立即生效。" },
+  "optShortcuts": { "message": "键盘快捷键" },
+  "optShortcutsHint": { "message": "可在 chrome://extensions/shortcuts 更改快捷键。默认：Alt+J（mac：Alt+Shift+J）。" }
+}
+

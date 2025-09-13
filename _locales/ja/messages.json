@@ -1,0 +1,16 @@
+{
+  "appName": { "message": "ChatGPT JumpBack" },
+  "appDesc": { "message": "ChatGPTの読み途中の位置にすばやく戻ります。" },
+  "actionTitle": { "message": "読み途中の会話に戻る" },
+  "menuInfo": { "message": "ChatGPT JumpBack" },
+  "menuToggleEnable": { "message": "ChatGPT JumpBack を有効化" },
+  "menuToggleDisable": { "message": "ChatGPT JumpBack を無効化" },
+  "menuPageJump": { "message": "読み途中の会話に戻る" }
+  ,
+  "optionsTitle": { "message": "ChatGPT JumpBack 設定" },
+  "optionsHeading": { "message": "ChatGPT JumpBack 設定" },
+  "optEnable": { "message": "拡張機能を有効にする" },
+  "optHint": { "message": "ChatGPT ページでのみ動作します。切り替えは即時反映されます。" },
+  "optShortcuts": { "message": "キーボードショートカット" },
+  "optShortcutsHint": { "message": "ショートカットは chrome://extensions/shortcuts から変更できます。既定は Alt+J（mac: Alt+Shift+J）。" }
+}

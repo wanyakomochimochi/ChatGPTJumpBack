@@ -1,0 +1,16 @@
+{
+  "appName": { "message": "ChatGPT JumpBack" },
+  "appDesc": { "message": "ChatGPT में अपनी पिछली पढ़ने की स्थिति पर तुरंत वापस जाएँ।" },
+  "actionTitle": { "message": "पिछली पढ़ने की स्थिति पर जाएँ" },
+  "menuInfo": { "message": "ChatGPT JumpBack" },
+  "menuToggleEnable": { "message": "ChatGPT JumpBack सक्षम करें" },
+  "menuToggleDisable": { "message": "ChatGPT JumpBack अक्षम करें" },
+  "menuPageJump": { "message": "पिछली पढ़ने की स्थिति पर जाएँ" },
+  "optionsTitle": { "message": "ChatGPT JumpBack विकल्प" },
+  "optionsHeading": { "message": "ChatGPT JumpBack विकल्प" },
+  "optEnable": { "message": "ChatGPT JumpBack सक्षम करें" },
+  "optHint": { "message": "केवल ChatGPT पेज पर काम करता है। बदलाव तुरंत लागू होते हैं।" },
+  "optShortcuts": { "message": "कीबोर्ड शॉर्टकट" },
+  "optShortcutsHint": { "message": "शॉर्टकट chrome://extensions/shortcuts पर बदलें। डिफ़ॉल्ट: Alt+J (Mac: Alt+Shift+J)।" }
+}
+

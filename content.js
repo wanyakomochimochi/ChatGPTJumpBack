@@ -2,19 +2,28 @@
 (() => {
   "use strict";
 
+  // Prevent multiple injections
+  if (typeof window !== "undefined") {
+    if (window.__chatgptJumpBackInjected) return;
+    window.__chatgptJumpBackInjected = true;
+  }
+
   let recordedIndex = null;
+  let lastRecordTs = 0; // debounce for recordOnly
   try { console.log("[ChatGPT JumpBack] content loaded"); } catch {}
 
   function safeCheck() {
     return !!document.querySelector("div[data-message-author-role]");
   }
 
-  // 画面中央に最も近い要素を記録
+  // Record the message block closest to viewport center (with light debounce)
   function recordOnly() {
+    const now = Date.now();
+    if (now - lastRecordTs < 200) return;
+    lastRecordTs = now;
     if (!safeCheck()) return;
-    const blocks = Array.from(
-      document.querySelectorAll("div[data-message-author-role]")
-    );
+
+    const blocks = Array.from(document.querySelectorAll("div[data-message-author-role]"));
     if (blocks.length === 0) return;
 
     const viewportCenter = window.innerHeight / 2;
@@ -35,62 +44,56 @@
 
     if (target) {
       recordedIndex = blocks.indexOf(target);
-      console.log("[ChatGPT JumpBack] 記録:", recordedIndex);
+      try { console.log("[ChatGPT JumpBack] recorded:", recordedIndex); } catch {}
     }
   }
 
-  // 記録位置にジャンプ
   function jumpBack() {
     if (!safeCheck()) return;
     if (recordedIndex === null) {
-      console.log("[ChatGPT JumpBack] 記録がありません");
+      try { console.log("[ChatGPT JumpBack] no record"); } catch {}
       return;
     }
     const messages = document.querySelectorAll("div[data-message-author-role]");
     if (recordedIndex < messages.length) {
       messages[recordedIndex].scrollIntoView({ behavior: "smooth", block: "center" });
-      console.log("[ChatGPT JumpBack] ジャンプ:", recordedIndex);
+      try { console.log("[ChatGPT JumpBack] jump:", recordedIndex); } catch {}
     }
   }
 
-  // 互換用カスタムイベント
-  document.addEventListener("chatgpt-jumpback-dojump", () => {
-    jumpBack();
-  });
+  // Backward-compat custom event
+  document.addEventListener("chatgpt-jumpback-dojump", () => jumpBack());
 
-  // 背景スクリプトからのメッセージでジャンプ
+  // Message from background
   if (typeof chrome !== "undefined" && chrome.runtime && chrome.runtime.onMessage) {
     chrome.runtime.onMessage.addListener((msg) => {
       if (msg && msg.type === "jump") jumpBack();
     });
   }
 
-  // キーボードショートカットは Chrome の commands に統一
-
-  // Enter送信時に記録
+  // Enter to send -> record
   document.addEventListener(
     "keydown",
     (e) => {
       if (e.key === "Enter" && !e.shiftKey) recordOnly();
     },
-    true // capture: ChatGPT 側で stopPropagation されても拾う
+    true
   );
 
-  // ページ内ショートカット実装は削除（競合回避・設定の一元化のため）
+  // Send button detection (event delegation, capture)
+  document.addEventListener(
+    "click",
+    (e) => {
+      const btn = e.target instanceof Element ? e.target.closest("button") : null;
+      if (!btn) return;
+      if (btn.matches('button[data-testid="send-button"]')) { recordOnly(); return; }
+      const aria = (btn.getAttribute("aria-label") || "").toLowerCase();
+      if (/(^|\b)send\b/.test(aria) || aria.includes("送信")) { recordOnly(); return; }
+    },
+    true
+  );
 
-  // 送信ボタン監視
-  const sendObserver = new MutationObserver(() => {
-    const sendBtn = document.querySelector('button[data-testid="send-button"]');
-    if (sendBtn && !sendBtn.dataset._jb_bound) {
-      sendBtn.addEventListener("click", () => recordOnly());
-      sendBtn.dataset._jb_bound = "1";
-    }
-  });
-  if (document.body) {
-    sendObserver.observe(document.body, { childList: true, subtree: true });
-  }
-
-  // 「最新へ」ボタンらしきものをクリックしたら記録（簡易判定）
+  // "Scroll to latest" broad detection (fallback): any button with an SVG icon
   document.addEventListener(
     "click",
     (e) => {
@@ -106,3 +109,4 @@
     true
   );
 })();
+
