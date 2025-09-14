@@ -25,5 +25,8 @@ Notes
 - ChatGPT is a SPA and UI may change; if detection stops working, selector updates may be required.
 - "Scroll to latest" detection includes a broad fallback to reduce missed detections (especially on mobile).
 
+Non‑affiliation
+- This extension is not affiliated with, endorsed, or sponsored by OpenAI or ChatGPT.
+
 Privacy
-- No user data is collected. Local storage is used only for the ON/OFF setting.
+- No data collection. Local storage stores only the ON/OFF setting.

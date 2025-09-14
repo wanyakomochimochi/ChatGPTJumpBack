@@ -84,6 +84,8 @@ The ON/OFF setting persists across restarts.
   - `https://chat.openai.com/*`
   - `https://chatgpt.com/*`
 - No network requests or analytics. Storage is used only for the ON/OFF setting.
+ - No network requests or analytics. Storage is used only for the ON/OFF setting.
+ - Not affiliated with, endorsed, or sponsored by OpenAI or ChatGPT.
 
 ---
 
@@ -120,14 +122,3 @@ MIT License
 - Project (GitHub): https://github.com/wanyakomochimochi/ChatGPTJumpBack
 
 ---
-
-## Packaging (ZIP for Chrome Web Store)
-
-- Simple (fixed name):
-  - `New-Item -ItemType Directory -Force dist | Out-Null`
-  - `$files = @('manifest.json','background.js','content.js','options.html','options.js','_locales','color_16.png','color_48.png','color_128.png','gray_16.png','gray_48.png','gray_128.png')`
-  - `Compress-Archive -Path $files -DestinationPath dist/ChatGPTJumpBack-v1.0.0.zip -Force`
-- Dynamic (use manifest version):
-  - `$mf = Get-Content manifest.json -Raw | ConvertFrom-Json`
-  - `$ver = $mf.version`
-  - `Compress-Archive -Path $files -DestinationPath ("dist/ChatGPTJumpBack-v$ver.zip") -Force`
