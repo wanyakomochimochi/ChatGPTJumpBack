@@ -25,14 +25,28 @@ async function refreshIcons() {
   }
 }
 
+// Debounced, duplicate-safe context menu rebuild
+let __menuUpdateTimer = null;
+async function rebuildContextMenus() {
+  await new Promise((resolve) => chrome.contextMenus.removeAll(() => resolve()));
+  const createSafe = (opts) => {
+    try {
+      chrome.contextMenus.create(opts, () => { void chrome.runtime.lastError; });
+    } catch (_) { /* ignore */ }
+  };
+  createSafe({ id: "jumpback-info", title: t("menuInfo"), contexts: ["action"] });
+  createSafe({ id: "jumpback-toggle", title: userEnabled ? t("menuToggleDisable") : t("menuToggleEnable"), contexts: ["action"] });
+  if (userEnabled) {
+    createSafe({ id: "jumpback-page-jump", title: t("menuPageJump"), contexts: ["page"], documentUrlPatterns: ["https://chat.openai.com/*", "https://chatgpt.com/*"] });
+  }
+}
+
 function updateContextMenus() {
-  chrome.contextMenus.removeAll(() => {
-    chrome.contextMenus.create({ id: "jumpback-info", title: t("menuInfo"), contexts: ["action"] });
-    chrome.contextMenus.create({ id: "jumpback-toggle", title: userEnabled ? t("menuToggleDisable") : t("menuToggleEnable"), contexts: ["action"] });
-    if (userEnabled) {
-      chrome.contextMenus.create({ id: "jumpback-page-jump", title: t("menuPageJump"), contexts: ["page"], documentUrlPatterns: ["https://chat.openai.com/*", "https://chatgpt.com/*"] });
-    }
-  });
+  if (__menuUpdateTimer) clearTimeout(__menuUpdateTimer);
+  __menuUpdateTimer = setTimeout(() => {
+    __menuUpdateTimer = null;
+    rebuildContextMenus();
+  }, 50);
 }
 
 chrome.action.onClicked.addListener((tab) => {
@@ -116,4 +130,3 @@ async function injectIntoExistingChatGPTTabs() {
     }
   } catch {}
 }
-

@@ -5,7 +5,10 @@ All notable changes to this project will be documented in this file.
 The format is based on Keep a Changelog, and this project adheres to Semantic Versioning.
 
 ## [Unreleased]
-- 
+-
+
+## [1.0.1] - 2025-09-16
+Fixed race condition in context menu creation.
 
 ## [1.0.0] - 2025-09-13
 First stable release.
@@ -21,5 +24,6 @@ Highlights
 - Initial implementation of JumpBack logic (record by index and jump).
 - Basic context menus and icon updates.
 
-[Unreleased]: https://github.com/wanyakomochimochi/ChatGPTJumpBack/compare/v1.0.0...HEAD
+[Unreleased]: https://github.com/wanyakomochimochi/ChatGPTJumpBack/compare/v1.0.1...HEAD
+[1.0.1]: https://github.com/wanyakomochimochi/ChatGPTJumpBack/compare/v1.0.0...v1.0.1
 [1.0.0]: https://github.com/wanyakomochimochi/ChatGPTJumpBack/releases/tag/v1.0.0
