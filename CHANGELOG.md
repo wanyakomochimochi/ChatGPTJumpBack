@@ -8,7 +8,8 @@ The format is based on Keep a Changelog, and this project adheres to Semantic Ve
 -
 
 ## [1.0.1] - 2025-09-16
-Fixed race condition in context menu creation.
+- Fixed race condition in context menu creation.
+- Added usage disclaimer to README (clarifying unofficial tool status, not affiliated with OpenAI, use at your own risk)
 
 ## [1.0.0] - 2025-09-13
 First stable release.
