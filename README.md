@@ -111,6 +111,13 @@ The ON/OFF setting persists across restarts.
 
 ---
 
+## Disclaimer
+
+- This is an **unofficial tool created by an individual developer**.
+- It is not an official OpenAI feature or extension.
+- Use at your own risk and responsibility.
+- The script does not interact with OpenAI’s models, algorithms, or servers. It only manipulates the visible DOM elements on the page.
+
 ## License
 
 MIT License
