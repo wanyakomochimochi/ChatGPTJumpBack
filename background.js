@@ -1,6 +1,17 @@
 // background.js
 let userEnabled = true; // ON=colored icon, OFF=gray (persisted)
 
+function getStoreUrl() {
+  const lang = chrome.i18n.getUILanguage(); // e.g. "ja", "en-US"
+  const baseUrl =
+    "https://chromewebstore.google.com/detail/chatgpt-jumpback/aadmenichpgbodjbkpenadnmngpanloh";
+  if (lang.startsWith("ja")) {
+    return baseUrl + "?hl=ja";
+  } else {
+    return baseUrl + "?hl=en";
+  }
+}
+
 function isChatGPTUrl(url) {
   if (!url) return false;
   try {
@@ -12,32 +23,70 @@ function isChatGPTUrl(url) {
 }
 
 function t(key) {
-  try { return chrome.i18n.getMessage(key) || key; } catch { return key; }
+  try {
+    return chrome.i18n.getMessage(key) || key;
+  } catch {
+    return key;
+  }
 }
 
 async function refreshIcons() {
   const colored = !!userEnabled;
   const tabs = await chrome.tabs.query({});
-  const coloredPath = { 16: "color_16.png", 48: "color_48.png", 128: "color_128.png" };
-  const grayPath = { 16: "gray_16.png", 48: "gray_48.png", 128: "gray_128.png" };
+  const coloredPath = {
+    16: "color_16.png",
+    48: "color_48.png",
+    128: "color_128.png",
+  };
+  const grayPath = {
+    16: "gray_16.png",
+    48: "gray_48.png",
+    128: "gray_128.png",
+  };
   for (const t of tabs) {
-    if (t.id) chrome.action.setIcon({ tabId: t.id, path: colored ? coloredPath : grayPath });
+    if (t.id)
+      chrome.action.setIcon({
+        tabId: t.id,
+        path: colored ? coloredPath : grayPath,
+      });
   }
 }
 
 // Debounced, duplicate-safe context menu rebuild
 let __menuUpdateTimer = null;
 async function rebuildContextMenus() {
-  await new Promise((resolve) => chrome.contextMenus.removeAll(() => resolve()));
+  await new Promise((resolve) =>
+    chrome.contextMenus.removeAll(() => resolve())
+  );
   const createSafe = (opts) => {
     try {
-      chrome.contextMenus.create(opts, () => { void chrome.runtime.lastError; });
-    } catch (_) { /* ignore */ }
+      chrome.contextMenus.create(opts, () => {
+        void chrome.runtime.lastError;
+      });
+    } catch (_) {
+      /* ignore */
+    }
   };
-  createSafe({ id: "jumpback-info", title: t("menuInfo"), contexts: ["action"] });
-  createSafe({ id: "jumpback-toggle", title: userEnabled ? t("menuToggleDisable") : t("menuToggleEnable"), contexts: ["action"] });
+  createSafe({
+    id: "jumpback-info",
+    title: t("menuInfo"),
+    contexts: ["action"],
+  });
+  createSafe({
+    id: "jumpback-toggle",
+    title: userEnabled ? t("menuToggleDisable") : t("menuToggleEnable"),
+    contexts: ["action"],
+  });
   if (userEnabled) {
-    createSafe({ id: "jumpback-page-jump", title: t("menuPageJump"), contexts: ["page"], documentUrlPatterns: ["https://chat.openai.com/*", "https://chatgpt.com/*"] });
+    createSafe({
+      id: "jumpback-page-jump",
+      title: t("menuPageJump"),
+      contexts: ["page"],
+      documentUrlPatterns: [
+        "https://chat.openai.com/*",
+        "https://chatgpt.com/*",
+      ],
+    });
   }
 }
 
@@ -59,7 +108,7 @@ chrome.action.onClicked.addListener((tab) => {
 
 chrome.contextMenus.onClicked.addListener((info, tab) => {
   if (info.menuItemId === "jumpback-info") {
-    chrome.tabs.create({ url: "https://github.com/wanyakomochimochi/ChatGPTJumpBack" });
+    chrome.tabs.create({ url: getStoreUrl() });
   }
   if (info.menuItemId === "jumpback-toggle") {
     userEnabled = !userEnabled;
@@ -89,12 +138,19 @@ chrome.tabs.onUpdated.addListener(async (tabId, changeInfo) => {
     updateContextMenus();
   }
 });
-chrome.tabs.onActivated.addListener(async () => { await refreshIcons(); updateContextMenus(); });
-chrome.tabs.onRemoved.addListener(async () => { await refreshIcons(); updateContextMenus(); });
+chrome.tabs.onActivated.addListener(async () => {
+  await refreshIcons();
+  updateContextMenus();
+});
+chrome.tabs.onRemoved.addListener(async () => {
+  await refreshIcons();
+  updateContextMenus();
+});
 
 chrome.runtime.onInstalled.addListener(async () => {
   try {
-    const { userEnabled: stored } = await chrome.storage?.local?.get?.("userEnabled") || {};
+    const { userEnabled: stored } =
+      (await chrome.storage?.local?.get?.("userEnabled")) || {};
     if (typeof stored === "boolean") userEnabled = stored;
   } catch {}
   await refreshIcons();
@@ -103,7 +159,8 @@ chrome.runtime.onInstalled.addListener(async () => {
 });
 chrome.runtime.onStartup.addListener(async () => {
   try {
-    const { userEnabled: stored } = await chrome.storage?.local?.get?.("userEnabled") || {};
+    const { userEnabled: stored } =
+      (await chrome.storage?.local?.get?.("userEnabled")) || {};
     if (typeof stored === "boolean") userEnabled = stored;
   } catch {}
   await refreshIcons();
@@ -119,11 +176,16 @@ chrome.storage.onChanged.addListener(async (changes, area) => {
 
 async function injectIntoExistingChatGPTTabs() {
   try {
-    const tabs = await chrome.tabs.query({ url: ["https://chat.openai.com/*", "https://chatgpt.com/*"] });
+    const tabs = await chrome.tabs.query({
+      url: ["https://chat.openai.com/*", "https://chatgpt.com/*"],
+    });
     for (const t of tabs) {
       if (!t.id) continue;
       try {
-        await chrome.scripting.executeScript({ target: { tabId: t.id }, files: ["content.js"] });
+        await chrome.scripting.executeScript({
+          target: { tabId: t.id },
+          files: ["content.js"],
+        });
       } catch (e) {
         // ignore
       }

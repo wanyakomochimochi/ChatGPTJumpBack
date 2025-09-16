@@ -2,7 +2,7 @@
 
 ChatGPT でプロンプトを送信するとページが末尾まで自動スクロールされます。JumpBack は、読み途中の場所（画面中央付近のメッセージ）を記録して、すぐに戻れるようにする拡張機能です。文脈を見失わずに会話を追えます。
 
-![メイン画面 - 末尾から読み途中に戻る](docs/screenshot-main.gif)
+![メイン画面 - 末尾から読み途中に戻る](docs/screenshot-main.ja.gif)
 
 ## 解決すること
 
@@ -127,4 +127,5 @@ MIT License
 
 ## リンク
 
-- プロジェクト（GitHub）: https://github.com/wanyakomochimochi/ChatGPTJumpBack
+- Project (GitHub): https://github.com/wanyakomochimochi/ChatGPTJumpBack
+- 拡張機能 (Chrome Web Store): https://chromewebstore.google.com/detail/chatgpt-jumpback/aadmenichpgbodjbkpenadnmngpanloh?hl=ja

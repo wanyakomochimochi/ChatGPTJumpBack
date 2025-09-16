@@ -127,5 +127,6 @@ MIT License
 ## Links
 
 - Project (GitHub): https://github.com/wanyakomochimochi/ChatGPTJumpBack
+- Extension (Chrome Web Store): https://chromewebstore.google.com/detail/chatgpt-jumpback/aadmenichpgbodjbkpenadnmngpanloh?hl=en
 
 ---
