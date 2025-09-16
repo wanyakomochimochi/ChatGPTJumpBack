@@ -23,16 +23,17 @@
 ## Changes
 
 ### v1.0.2
+
 - Fixed/updated GIF demo in README.
 - Info menu link now opens Chrome Web Store in JA/EN based on browser language.
 
 ### v1.0.1
+
 - Added usage disclaimer to the README
-(clarifying that this is an unofficial tool, not affiliated with OpenAI, use at your own risk, and operates only on the visible DOM)
+  (clarifying that this is an unofficial tool, not affiliated with OpenAI, use at your own risk, and operates only on the visible DOM)
 - Fixed a race condition in context menu creation
 
 ## Links
-
-- README: Features, usage, and screenshots
-- Changelog: CHANGELOG.md
-- Repo: https://github.com/wanyakomochimochi/ChatGPTJumpBack
+- README: https://github.com/wanyakomochimochi/ChatGPTJumpBack#readme
+- Changelog: https://github.com/wanyakomochimochi/ChatGPTJumpBack/blob/main/CHANGELOG.md
+- Repository: https://github.com/wanyakomochimochi/ChatGPTJumpBack

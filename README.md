@@ -84,8 +84,7 @@ The ON/OFF setting persists across restarts.
   - `https://chat.openai.com/*`
   - `https://chatgpt.com/*`
 - No network requests or analytics. Storage is used only for the ON/OFF setting.
- - No network requests or analytics. Storage is used only for the ON/OFF setting.
- - Not affiliated with, endorsed, or sponsored by OpenAI or ChatGPT.
+- Not affiliated with, endorsed, or sponsored by OpenAI or ChatGPT.
 
 ---
 
