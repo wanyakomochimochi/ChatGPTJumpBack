@@ -1,8 +1,8 @@
-# Version 1.0.2
+# Version 1.1.0
 
 ## Vue d’ensemble
 
-- Même si ChatGPT défile automatiquement vers le bas, vous pouvez rapidement revenir à l’endroit où vous lisiez.
+- Cette fonctionnalité vous permet de revenir à votre position d’origine en un seul clic après avoir envoyé une question à l’IA ou appuyé sur le bouton de défilement lors de l’utilisation de ChatGPT. Lorsque vous relisez vos anciens journaux de conversation et que vous souhaitez poser une question, vous n’avez plus besoin de rechercher à nouveau l’endroit où vous étiez. Après avoir vu la réponse de l’IA, si une nouvelle question vous vient à l’esprit, pas de souci ! En quelques clics, vous pouvez toujours revenir à votre position initiale.
 
 ## Points forts
 
@@ -21,6 +21,9 @@
 
 ## Modifications
 
+### v1.1.0
+- Extension de la fonctionnalité permettant de revenir de façon répétée à des positions antérieures sur la page, et pas seulement à la plus récente.
+
 ### v1.0.2
 - GIF de démonstration dans le README corrigé/mis à jour.
 - Le lien du menu d’information ouvre désormais le Chrome Web Store en JA/EN selon la langue du navigateur.
@@ -34,4 +37,3 @@
 - README (Anglais): https://github.com/wanyakomochimochi/ChatGPTJumpBack#readme (English)
 - Journal des modifications: https://github.com/wanyakomochimochi/ChatGPTJumpBack/blob/main/CHANGELOG.md (English)
 - Dépôt: https://github.com/wanyakomochimochi/ChatGPTJumpBack (English)
-

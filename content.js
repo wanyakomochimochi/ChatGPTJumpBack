@@ -8,12 +8,26 @@
     window.__chatgptJumpBackInjected = true;
   }
 
-  let recordedIndex = null;
+  // Use a LIFO stack to keep multiple recorded indices
+  let recordedStack = [];
   let lastRecordTs = 0; // debounce for recordOnly
-  try { console.log("[ChatGPT JumpBack] content loaded"); } catch {}
+  const STACK_LIMIT = 200;
+  try {
+    console.log("[ChatGPT JumpBack] content loaded");
+  } catch {}
 
   function safeCheck() {
     return !!document.querySelector("div[data-message-author-role]");
+  }
+
+  function pushIndex(idx) {
+    if (typeof idx !== "number" || Number.isNaN(idx)) return;
+    const last = recordedStack.length
+      ? recordedStack[recordedStack.length - 1]
+      : null;
+    if (last === idx) return; // avoid consecutive duplicates
+    recordedStack.push(idx);
+    if (recordedStack.length > STACK_LIMIT) recordedStack.shift();
   }
 
   // Record the message block closest to viewport center (with light debounce)
@@ -23,7 +37,9 @@
     lastRecordTs = now;
     if (!safeCheck()) return;
 
-    const blocks = Array.from(document.querySelectorAll("div[data-message-author-role]"));
+    const blocks = Array.from(
+      document.querySelectorAll("div[data-message-author-role]")
+    );
     if (blocks.length === 0) return;
 
     const viewportCenter = window.innerHeight / 2;
@@ -43,29 +59,58 @@
     }
 
     if (target) {
-      recordedIndex = blocks.indexOf(target);
-      try { console.log("[ChatGPT JumpBack] recorded:", recordedIndex); } catch {}
+      const idx = blocks.indexOf(target);
+      pushIndex(idx);
+      try {
+        console.log(
+          "[ChatGPT JumpBack] recorded:",
+          idx,
+          "stack size:",
+          recordedStack.length
+        );
+      } catch {}
     }
   }
 
   function jumpBack() {
     if (!safeCheck()) return;
-    if (recordedIndex === null) {
-      try { console.log("[ChatGPT JumpBack] no record"); } catch {}
+    if (!recordedStack.length) {
+      try {
+        console.log("[ChatGPT JumpBack] no record");
+      } catch {}
       return;
     }
     const messages = document.querySelectorAll("div[data-message-author-role]");
-    if (recordedIndex < messages.length) {
-      messages[recordedIndex].scrollIntoView({ behavior: "smooth", block: "center" });
-      try { console.log("[ChatGPT JumpBack] jump:", recordedIndex); } catch {}
+    // Pop until a valid index is found or stack is empty
+    while (recordedStack.length) {
+      const idx = recordedStack.pop();
+      if (typeof idx === "number" && idx >= 0 && idx < messages.length) {
+        messages[idx].scrollIntoView({ behavior: "smooth", block: "center" });
+        try {
+          console.log(
+            "[ChatGPT JumpBack] jump:",
+            idx,
+            "remaining stack:",
+            recordedStack.length
+          );
+        } catch {}
+        return;
+      }
     }
+    try {
+      console.log("[ChatGPT JumpBack] no valid record");
+    } catch {}
   }
 
   // Backward-compat custom event
   document.addEventListener("chatgpt-jumpback-dojump", () => jumpBack());
 
   // Message from background
-  if (typeof chrome !== "undefined" && chrome.runtime && chrome.runtime.onMessage) {
+  if (
+    typeof chrome !== "undefined" &&
+    chrome.runtime &&
+    chrome.runtime.onMessage
+  ) {
     chrome.runtime.onMessage.addListener((msg) => {
       if (msg && msg.type === "jump") jumpBack();
     });
@@ -84,11 +129,18 @@
   document.addEventListener(
     "click",
     (e) => {
-      const btn = e.target instanceof Element ? e.target.closest("button") : null;
+      const btn =
+        e.target instanceof Element ? e.target.closest("button") : null;
       if (!btn) return;
-      if (btn.matches('button[data-testid="send-button"]')) { recordOnly(); return; }
+      if (btn.matches('button[data-testid="send-button"]')) {
+        recordOnly();
+        return;
+      }
       const aria = (btn.getAttribute("aria-label") || "").toLowerCase();
-      if (/(^|\b)send\b/.test(aria) || aria.includes("送信")) { recordOnly(); return; }
+      if (/(^|\b)send\b/.test(aria) || aria.includes("送信")) {
+        recordOnly();
+        return;
+      }
     },
     true
   );
@@ -109,4 +161,3 @@
     true
   );
 })();
-

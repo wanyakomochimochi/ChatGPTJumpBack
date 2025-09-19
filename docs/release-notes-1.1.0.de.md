@@ -1,8 +1,8 @@
-# Version 1.0.2
+# Version 1.1.0
 
 ## Übersicht
 
-- Auch wenn ChatGPT automatisch nach unten scrollt, können Sie schnell zu der Stelle zurückkehren, an der Sie gelesen haben.
+- Mit dieser Funktion können Sie mit nur einem Klick zu Ihrer ursprünglichen Position zurückkehren, nachdem Sie eine Frage an die KI gesendet oder die Scrolltaste gedrückt haben, während Sie ChatGPT verwenden. Wenn Sie alte Gesprächsprotokolle durchsehen und eine Frage stellen möchten, müssen Sie Ihren Platz nicht mehr erneut suchen. Nachdem Sie die Antwort der KI gelesen haben, können Sie bei Bedarf sofort eine neue Frage stellen. Mit nur wenigen Klicks gelangen Sie jederzeit wieder an Ihre ursprüngliche Stelle.
 
 ## Highlights
 
@@ -20,6 +20,9 @@
 - contextMenus, tabs, storage, scripting (nur für die Injektion in bestehende Tabs verwendet)
 
 ## Änderungen
+
+### v1.1.0
+- Die Funktion wurde erweitert, sodass man wiederholt zu früheren Positionen auf der Seite zurückspringen kann, nicht nur zur letzten.
 
 ### v1.0.2
 - GIF-Demo im README korrigiert/aktualisiert.

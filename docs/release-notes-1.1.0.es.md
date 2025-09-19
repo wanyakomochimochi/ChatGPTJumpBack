@@ -1,8 +1,8 @@
-# Versión 1.0.2
+# Versión 1.1.0
 
 ## Descripción general
 
-- Incluso si ChatGPT se desplaza automáticamente al final, puede volver rápidamente al lugar donde estaba leyendo.
+- Esta función te permite volver a tu lugar original con un solo clic después de enviar una pregunta a la IA o presionar el botón de desplazamiento mientras usas ChatGPT. Cuando estés revisando registros de conversaciones pasadas y quieras hacer una pregunta, ya no tendrás que buscar tu lugar de nuevo. Después de ver la respuesta de la IA, si surge otra pregunta, ¡no hay problema! Con solo unos clics, siempre podrás regresar a tu lugar original.
 
 ## Destacados
 
@@ -20,6 +20,9 @@
 - contextMenus, tabs, storage, scripting (usado solo para inyección en pestañas existentes)
 
 ## Cambios
+
+### v1.1.0
+- Se amplió la función para permitir volver repetidamente a posiciones anteriores en la página, no solo a la más reciente.
 
 ### v1.0.2
 - GIF de demostración en el README corregido/actualizado.

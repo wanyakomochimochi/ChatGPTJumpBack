@@ -1,8 +1,8 @@
-# Versão 1.0.2
+# Versão 1.1.0
 
 ## Visão geral
 
-- Mesmo que o ChatGPT role automaticamente até o final, você pode rapidamente voltar para onde estava lendo.
+- Este recurso permite que você volte ao seu lugar original com um único clique após enviar uma pergunta para a IA ou pressionar o botão de rolagem enquanto usa o ChatGPT. Quando estiver revisando conversas anteriores e quiser fazer uma pergunta, não será mais necessário procurar novamente onde você estava. Depois de ver a resposta da IA, se surgir outra pergunta, não tem problema! Com apenas alguns cliques, você sempre pode voltar ao ponto original.
 
 ## Destaques
 
@@ -20,6 +20,9 @@
 - contextMenus, tabs, storage, scripting (usado apenas para injeção em abas existentes)
 
 ## Alterações
+
+### v1.1.0
+- A funcionalidade foi ampliada para permitir voltar repetidamente a posições anteriores na página, e não apenas à mais recente.
 
 ### v1.0.2
 - GIF de demonstração no README corrigido/atualizado.

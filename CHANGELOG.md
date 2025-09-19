@@ -7,6 +7,9 @@ The format is based on Keep a Changelog, and this project adheres to Semantic Ve
 ## [Unreleased]
 -
 
+## [1.1.0] - 2025-09-19
+- Added a new multi-step jump feature, allowing users to jump back repeatedly to earlier positions on the page (not just the most recent one).
+
 ## [1.0.2] - 2025-09-16
 - Fixed/updated GIF demo in README.
 - Info menu link now opens Chrome Web Store in JA/EN based on browser language.
